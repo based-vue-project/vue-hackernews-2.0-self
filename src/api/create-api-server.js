@@ -1,3 +1,6 @@
+/*
+ * server数据请求对象的配置,firebase 存储数据
+ */
 import Firebase from 'firebase'
 import LRU from 'lru-cache'
 

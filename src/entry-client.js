@@ -1,5 +1,8 @@
+/*
+ * client入口，创建vue实例，挂在到DOM。服务器初始化状态存储
+ */
 import Vue from 'vue'
-import 'es6-promise/auto'
+import 'es6-promise/auto'  // ie9的promise支持
 import { createApp } from './app'
 import ProgressBar from './components/ProgressBar.vue'
 
@@ -26,6 +29,7 @@ const { app, router, store } = createApp()
 
 // prime the store with server-initialized state.
 // the state is determined during SSR and inlined in the page markup.
+// 第一次进入页面时获取ssr的state替换上
 if (window.__INITIAL_STATE__) {
   store.replaceState(window.__INITIAL_STATE__)
 }
@@ -38,6 +42,8 @@ router.onReady(() => {
   // the data that we already have. Using router.beforeResolve() so that all
   // async components are resolved.
   router.beforeResolve((to, from, next) => {
+    // router.getMatchedComponents(location?)
+    // 返回目标位置或是当前路由匹配的组件数组。通常在服务端渲染的数据预加载时候。
     const matched = router.getMatchedComponents(to)
     const prevMatched = router.getMatchedComponents(from)
     let diffed = false
@@ -59,10 +65,13 @@ router.onReady(() => {
   })
 
   // actually mount to DOM
-  app.$mount('#app')
+  // 当vue实例没有el属性时，没有挂载到某个dom,之后手动调用vm.$mount()方法来挂载。
+  // 把app与ssr的html同步
+  app.$mount('#app') 
 })
 
 // service worker
+// 生产环境优化使用sw缓存
 if ('https:' === location.protocol && navigator.serviceWorker) {
   navigator.serviceWorker.register('/service-worker.js')
 }

@@ -1,3 +1,7 @@
+/*
+ * export一个供服务端的renderer使用的函数
+ * 在服务端获取数据，存储到vuex,再将state存储到context.
+ */
 import { createApp } from './app'
 
 const isDev = process.env.NODE_ENV !== 'production'
@@ -20,12 +24,14 @@ export default context => {
     }
 
     // set router's location
+    // 使用前端路由切换到请求的url
     router.push(url)
 
     // wait until router has resolved possible async hooks
     router.onReady(() => {
-      const matchedComponents = router.getMatchedComponents()
+      const matchedComponents = router.getMatchedComponents()  // 获取该路由的所有Component
       // no matched routes
+      // 没有Component说明没有路由匹配
       if (!matchedComponents.length) {
         return reject({ code: 404 })
       }
@@ -33,6 +39,7 @@ export default context => {
       // A preFetch hook dispatches a store action and returns a Promise,
       // which is resolved when the action is complete and store state has been
       // updated.
+      // 使用Promise.all把所有的Component有异步preFetch方法执行
       Promise.all(matchedComponents.map(({ asyncData }) => asyncData && asyncData({
         store,
         route: router.currentRoute
@@ -44,8 +51,8 @@ export default context => {
         // inline the state in the HTML response. This allows the client-side
         // store to pick-up the server-side state without having to duplicate
         // the initial data fetching on the client.
-        context.state = store.state
-        resolve(app)
+        context.state = store.state  // 把vuex的state设置到传入的context.initialState上
+        resolve(app) 
       }).catch(reject)
     }, reject)
   })

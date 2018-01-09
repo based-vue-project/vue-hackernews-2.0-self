@@ -1,3 +1,6 @@
+/*
+ * 基础webpack构建：模块加载，依赖插件，打包
+ */
 const path = require('path')
 const webpack = require('webpack')
 const vueConfig = require('./vue-loader.config')

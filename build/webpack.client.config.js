@@ -1,7 +1,10 @@
+/*
+ * webpack构建：打包，client入口配置，环境变量，依赖插件，缓存外部项目依赖项
+ */
 const webpack = require('webpack')
 const merge = require('webpack-merge')
 const base = require('./webpack.base.config')
-const SWPrecachePlugin = require('sw-precache-webpack-plugin')
+const SWPrecachePlugin = require('sw-precache-webpack-plugin') // 用来缓存外部项目依赖项，server-worker的支持
 const VueSSRClientPlugin = require('vue-server-renderer/client-plugin')
 
 const config = merge(base, {
@@ -10,7 +13,7 @@ const config = merge(base, {
   },
   resolve: {
     alias: {
-      'create-api': './create-api-client.js'
+      'create-api': './create-api-client.js'  // 设置好api为client的js导入
     }
   },
   plugins: [

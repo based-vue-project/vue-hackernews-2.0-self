@@ -1,3 +1,6 @@
+/*
+ * dev的热生成：开启热加载，手动触发webpack执行器，构建、监听并更新server renderer
+ */
 const fs = require('fs')
 const path = require('path')
 const MFS = require('memory-fs')
@@ -52,6 +55,8 @@ module.exports = function setupDevServer (app, templatePath, cb) {
     noInfo: true
   })
   app.use(devMiddleware)
+  // 在client-webpack转换完成时获取devMiddleware的fileSystem。
+  // 读取生成的index.html并通过传入的opt的回调设置到server.js里
   clientCompiler.plugin('done', stats => {
     stats = stats.toJson()
     stats.errors.forEach(err => console.error(err))
@@ -69,8 +74,11 @@ module.exports = function setupDevServer (app, templatePath, cb) {
 
   // watch and update server renderer
   const serverCompiler = webpack(serverConfig)
+  // 通过memory-fs创建一个内存文件系统对象
   const mfs = new MFS()
+  // 把server-webpack生成的文件重定向到内存中
   serverCompiler.outputFileSystem = mfs
+  // 设置文件重新编译监听并通过opt的回调设置到server.js
   serverCompiler.watch({}, (err, stats) => {
     if (err) throw err
     stats = stats.toJson()

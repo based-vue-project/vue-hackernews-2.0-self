@@ -53,7 +53,7 @@ export default {
       return this.page < this.maxPage
     }
   },
-
+  // 在判断root已经挂载,说明是路由跳转重新调用loadItems
   beforeMount () {
     if (this.$root._isMounted) {
       this.loadItems(this.page)
@@ -78,6 +78,7 @@ export default {
   },
 
   methods: {
+    // 触发vuex设置的动作来请求数据
     loadItems (to = this.page, from = -1) {
       this.$bar.start()
       this.$store.dispatch('FETCH_LIST_DATA', {

@@ -1,3 +1,6 @@
+/*
+ * 数据请求方式
+ */
 // this is aliased in webpack config based on server/client build
 import { createAPI } from 'create-api'
 
@@ -24,10 +27,12 @@ function warmCache () {
 function fetch (child) {
   logRequests && console.log(`fetching ${child}...`)
   const cache = api.cachedItems
+  // 优化可不做
   if (cache && cache.has(child)) {
     logRequests && console.log(`cache hit for ${child}.`)
     return Promise.resolve(cache.get(child))
   } else {
+    // 获取api数据并设置最后更新时间
     return new Promise((resolve, reject) => {
       api.child(child).once('value', snapshot => {
         const val = snapshot.val()
