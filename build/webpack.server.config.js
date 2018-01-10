@@ -23,6 +23,7 @@ module.exports = merge(base, {
   },
   // https://webpack.js.org/configuration/externals/#externals
   // https://github.com/liady/webpack-node-externals
+  // 外置化应用程序依赖模块，使服务器构建速度更快，并声称较小的bundle文件。
   externals: nodeExternals({
     // do not externalize CSS files in case we need to import it from a dep
     whitelist: /\.css$/
@@ -32,6 +33,7 @@ module.exports = merge(base, {
       'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development'),
       'process.env.VUE_ENV': '"server"'
     }),
+    // 将服务器整个输出，构建为单个JSON文件的插件，文件默认名vue-ssr-server-bundle.json
     new VueSSRServerPlugin()
   ]
 })

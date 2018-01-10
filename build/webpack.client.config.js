@@ -9,7 +9,7 @@ const VueSSRClientPlugin = require('vue-server-renderer/client-plugin')
 
 const config = merge(base, {
   entry: {
-    app: './src/entry-client.js'
+    app: './src/entry-client.js' // 生成客户端构建清单client manifest
   },
   resolve: {
     alias: {
@@ -40,7 +40,8 @@ const config = merge(base, {
     new webpack.optimize.CommonsChunkPlugin({
       name: 'manifest'
     }),
-    new VueSSRClientPlugin()
+    // 在dist目录，生成vue-ssr-client-manifest.json。记录页面所有依赖文件列表，在生成最终HTML时方便注入相应的js链接和css链接
+    new VueSSRClientPlugin() 
   ]
 })
 
