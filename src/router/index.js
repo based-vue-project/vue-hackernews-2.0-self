@@ -4,7 +4,7 @@ import Router from 'vue-router'
 Vue.use(Router)
 
 // route-level code splitting
-const createListView = id => () => import('../views/CreateListView').then(m => m.default(id))
+const createListView = id => () => import('../views/CreateListView').then(m => m.default(id)) // es6箭头函数
 const ItemView = () => import('../views/ItemView.vue')
 const UserView = () => import('../views/UserView.vue')
 

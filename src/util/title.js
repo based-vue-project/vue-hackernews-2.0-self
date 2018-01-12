@@ -2,7 +2,7 @@ function getTitle (vm) {
   const { title } = vm.$options
   if (title) {
     return typeof title === 'function'
-      ? title.call(vm)
+      ? title.call(vm) // title对象代替this对象
       : title
   }
 }
