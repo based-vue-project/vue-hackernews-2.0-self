@@ -11,6 +11,7 @@ const isDev = process.env.NODE_ENV !== 'production'
 // state of our application before actually rendering it.
 // Since data fetching is async, this function is expected to
 // return a Promise that resolves to the app instance.
+// server.js的renderToStream方法会调用这里
 export default context => {
    // 因为有可能会是异步路由钩子函数或组件，所以我们将返回一个 Promise，以便服务器能够等待所有的内容在渲染前，就已经准备就绪。
   return new Promise((resolve, reject) => {

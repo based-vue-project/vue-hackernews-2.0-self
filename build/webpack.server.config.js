@@ -10,13 +10,13 @@ const VueSSRServerPlugin = require('vue-server-renderer/server-plugin')
 
 module.exports = merge(base, {
   target: 'node', // 生成后的运行环境为node
-  devtool: '#source-map',
-  entry: './src/entry-server.js',
+  devtool: '#source-map', // 关闭map
+  entry: './src/entry-server.js', // 替换到server-entry.js
   output: {
     filename: 'server-bundle.js',  // 设置输出文件名与模块导出为commonjs2
     libraryTarget: 'commonjs2'
   },
-  resolve: {
+  resolve: { // api设置到server的api上
     alias: {
       'create-api': './create-api-server.js'
     }
@@ -29,7 +29,7 @@ module.exports = merge(base, {
     whitelist: /\.css$/
   }),
   plugins: [
-    new webpack.DefinePlugin({
+    new webpack.DefinePlugin({ // 设置环境变量
       'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development'),
       'process.env.VUE_ENV': '"server"'
     }),

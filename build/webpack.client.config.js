@@ -18,7 +18,7 @@ const config = merge(base, {
   },
   plugins: [
     // strip dev-only code in Vue source
-    new webpack.DefinePlugin({
+    new webpack.DefinePlugin({ // 设置好环境变量
       'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development'),
       'process.env.VUE_ENV': '"client"'
     }),
