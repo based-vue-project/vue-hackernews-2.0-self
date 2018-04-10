@@ -1,5 +1,7 @@
 /*
  * dev的热生成：开启热加载，手动触发webpack执行器，构建、监听并更新server renderer
+ * 通过dev server的webpack-dev-middleware和webpack-hot-middleware实现客户端代码的热更新；
+ * 通过webpack的watch功能实现服务端代码的热更新
  */
 const fs = require('fs')
 const path = require('path')
@@ -9,6 +11,7 @@ const chokidar = require('chokidar')
 const clientConfig = require('./webpack.client.config')
 const serverConfig = require('./webpack.server.config')
 
+// 文件读取处理
 const readFile = (fs, file) => {
   try {
     return fs.readFileSync(path.join(clientConfig.output.path, file), 'utf-8')
@@ -32,7 +35,7 @@ module.exports = function setupDevServer (app, templatePath, cb) {
     }
   }
 
-  // read template from disk and watch
+  // 从磁盘和watch读取模板
   template = fs.readFileSync(templatePath, 'utf-8')
   chokidar.watch(templatePath).on('change', () => {
     template = fs.readFileSync(templatePath, 'utf-8')
@@ -40,7 +43,7 @@ module.exports = function setupDevServer (app, templatePath, cb) {
     update()
   })
 
-  // modify client config to work with hot middleware
+  // 修改客户端配置以使用热中间件
   clientConfig.entry.app = ['webpack-hot-middleware/client', clientConfig.entry.app]
   clientConfig.output.filename = '[name].js'
   clientConfig.plugins.push(
@@ -70,7 +73,7 @@ module.exports = function setupDevServer (app, templatePath, cb) {
   })
 
   // hot middleware
-  app.use(require('webpack-hot-middleware')(clientCompiler, { heartbeat: 5000 }))
+  app.use(require('webpack-hot-middleware')(clientCompiler, { heartbeat: 5000 })) // 5s发送一次heartbeat更新到客户端
 
   // watch and update server renderer
   const serverCompiler = webpack(serverConfig)
