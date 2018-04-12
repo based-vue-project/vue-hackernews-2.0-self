@@ -66,6 +66,7 @@ module.exports = {
           compress: { warnings: false }
         }),
         // 作用域提升：可以提升(hoist)或者预编译所有模块到一个闭包中，提升你的代码在浏览器中的执行速度。
+        // 将所有的入口 chunk(entry chunks)中引用的 *.css，移动到独立分离的 CSS 文件。
         new webpack.optimize.ModuleConcatenationPlugin(),
         new ExtractTextPlugin({
           filename: 'common.[chunkhash].css'

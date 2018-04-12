@@ -23,6 +23,7 @@ const config = merge(base, {
       'process.env.VUE_ENV': '"client"'
     }),
     // extract vendor chunks for better caching
+    // 当多个 bundle 共享一些相同的依赖，CommonsChunkPlugin 有助于提取这些依赖到共享的 bundle 中，来避免重复打包。
     new webpack.optimize.CommonsChunkPlugin({
       name: 'vendor',
       minChunks: function (module) {
